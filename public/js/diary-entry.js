@@ -3,20 +3,17 @@ class DiaryEntry {
   constructor(diaryId, containerElement) {
     this.containerElement = containerElement;
     this.diaryId = diaryId;
-    this.currentDate = new Date();
+    this.date = '';
     this.title = document.querySelector('.entry h1');
     this.textArea = document.querySelector('textarea');
     this.paragraph = document.querySelector('.entry-details');
 
     this.showTextArea = this.showTextArea.bind(this);
     this.updateEntry = this.updateEntry.bind(this);
-
-    const options = { month: 'long', day: 'numeric' };
-
-    this.title.textContent = this.currentDate.toLocaleDateString('en-US', options)
+    this.loadEntry = this.loadEntry.bind(this);
 
     const controlBarContainer = document.querySelector('.control-bar');
-    this.controlBar = new ControlBar(controlBarContainer);
+    this.controlBar = new ControlBar(controlBarContainer, this.updateEntry, this.loadEntry);
 
     const textContainer = document.querySelector('.text-container');
     textContainer.addEventListener("click", this.showTextArea);
@@ -24,11 +21,19 @@ class DiaryEntry {
     const entryScreen = document.querySelector('.entry');
     entryScreen.addEventListener("click", this.updateEntry);
 
-    this.loadEntry();
+    this.loadEntry(0);
     this.containerElement.classList.remove('hidden');
   }
 
-  loadEntry() {
+  loadEntry(value) {
+    if (value === 0) {
+      this.date = new Date();
+    } else {
+      this.date.setDate(this.date.getDate() + value);
+    }
+    const options = { month: 'long', day: 'numeric' };
+    this.title.textContent = this.date.toLocaleDateString('en-US', options);
+
     const objectr = {
       id: 'sfdhkjfdskjhjhkdfs',
       diaryId: '87345874358',
@@ -43,7 +48,7 @@ class DiaryEntry {
   showTextArea(event) {
     event.stopPropagation();
     this.paragraph.classList.add('hidden');
-    this.textArea.textContent = this.paragraph.textContent;
+    this.textArea.value = this.paragraph.textContent;
     this.controlBar.changeToAcceptContols();
     this.textArea.classList.remove('hidden');
   }
@@ -59,6 +64,8 @@ class DiaryEntry {
       this.textArea.classList.add('hidden');
       this.paragraph.classList.remove('hidden');
     }
+    this.controlBar.revertToNormalContols();
+
   }
 
 

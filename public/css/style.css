@@ -104,7 +104,7 @@ textarea {
   cursor: pointer;
 }
 
-.control-bar p {
+.control-bar div p {
   font-size: 17px;
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
