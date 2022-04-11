@@ -2,14 +2,15 @@ const { MongoClient } = require("mongodb");
 const ObjectID = require('mongodb').ObjectId;
 
 const DATABASE_NAME = 'diary-entry';
-const MONGO_URL = `mongodb://localhost:27017/${DATABASE_NAME}`;
+const MONGO_URL = "mongodb://localhost:27017";
 
 let db = null;
 let collectionDiaries = null;
 let collectionDiaryEntries = null;
 
 async function main() {
-  db = await MongoClient.connect(MONGO_URL);
+  const client = await MongoClient.connect(MONGO_URL);
+  db = client.db(DATABASE_NAME);
   collectionDiaries = db.collection('diaries');
   collectionDiaryEntries = db.collection('entries');
 
@@ -24,7 +25,7 @@ async function main() {
   console.log('Insert or update Entry');
   await insertOrUpdateEntry();
 
-  db.close();
+  client.close();
 }
 
 main();
@@ -42,7 +43,7 @@ async function insertDiary() {
 async function findEntry() {
   const curDate = new Date();
   const query = {
-    diaryId: ObjectID('12EUFSDUJFDSKJDSJK'),
+    diaryId: ObjectID("62543304291b3b5b59a51ce5"),
     date: curDate.toLocaleDateString()
   };
 
@@ -51,20 +52,24 @@ async function findEntry() {
 }
 
 async function insertOrUpdateEntry() {
+  const curDate = new Date();
   const query = {
-    _id: ObjectID('14238345rfjsdmndsf8348345')
+    date: curDate.toLocaleDateString(),
+    diaryId: ObjectID("62543304291b3b5b59a51ce5")
   };
 
   const newEntry = {
-    diaryId: ObjectID('12EUFSDUJFDSKJDSJK'),
-    date: curDate.toLocaleDateString(),
-    contents: "Peter parker"
+    $set: {
+      diaryId: ObjectID("62543304291b3b5b59a51ce5"),
+      date: curDate.toLocaleDateString(),
+      contents: "Peter parks me now"
+    }
   }
 
   const params = {
     upsert: true
   }
 
-  const result = await collectionDiaryEntries.update(query, newEntry, params);
+  const result = await collectionDiaryEntries.updateOne(query, newEntry, params);
   console.log(`Found: ${result}`);
 }
