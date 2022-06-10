@@ -57,7 +57,7 @@ class DiaryEntry {
     this.containerElement.classList.remove('hidden');
   }
 
-  loadEntry(value) {
+  async loadEntry(value) {
     const options = { month: 'long', day: 'numeric' };
 
     if (value === 0) {
@@ -77,13 +77,13 @@ class DiaryEntry {
     this.title.textContent = this.date.toLocaleDateString('en-US', options);
     this.prompt.textContent = this.prompts[index - 1];
 
-    const objectr = {
-      id: 'sfdhkjfdskjhjhkdfs',
-      diaryId: '87345874358',
-    }
+    //make a get request with date and diary id to see if their is conent to display
+    //fetch(`nodeapi/?=${this.diaryId}/&${this.date.toLocaleDateString()}`)
+    const result = await fetch(`/lookupEntry/${this.diaryId}?date=${this.date.toLocaleDateString()}`);
+    const data = await result.json();
 
-    if (objectr.content) {
-      this.paragraph.textContent = objectr.content;
+    if (data.content) {
+      this.paragraph.textContent = data.content;
       this.paragraph.classList.remove('hidden');
     }
   }
@@ -96,12 +96,24 @@ class DiaryEntry {
     this.textArea.classList.remove('hidden');
   }
 
-  updateEntry() {
+  async updateEntry() {
     if (!this.textArea.classList.contains('hidden')) {
       const text = this.textArea.value;
-      console.log(text);
       if (this.paragraph.textContent !== text) {
-        console.log("update on db");
+        const entry = {
+          content: text
+        };
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(entry)
+        }
+        const result = await fetch(`/newEntry/${this.diaryId}?date=${this.date.toLocaleDateString()}`, fetchOptions);
+        const data = await result.json();
+        console.log(data);
         this.paragraph.textContent = text
       }
       this.textArea.classList.add('hidden');

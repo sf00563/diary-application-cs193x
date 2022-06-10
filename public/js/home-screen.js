@@ -11,11 +11,11 @@ class HomeScreen {
     this.containerElement.classList.remove('hidden')
   }
 
-  createNewDiary() {
-    console.log("hi");
-    const result = {
-      idDiary: "12345"
-    }
+  async createNewDiary() {
+    // async await is just a neater way than using promises(then) and functions like jsonReady etc
+    const result = await fetch('/newDiary', { method: 'POST' });
+    const json = await result.json();
+    console.log(json.id);
     //window.location.href = `/id/${result.idDiary}`
   }
 }
