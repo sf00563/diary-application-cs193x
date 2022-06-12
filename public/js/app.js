@@ -1,11 +1,15 @@
 class App {
 
   constructor() {
-
-    if (false) {
-      this.showHomeScreen();
+    const urlPathString = window.location.pathname;
+    const parts = urlPathString.split('/');
+    console.log(parts);
+    if (parts.length > 2 && parts[2].length > 0) {
+      console.log(parts);
+      const diaryId = parts[2];
+      this.showDiaryScreen(diaryId);
     } else {
-      this.showDiaryScreen("fdskjfdskfdskj");
+      this.showHomeScreen();
     }
 
 

@@ -59,6 +59,7 @@ class DiaryEntry {
 
   async loadEntry(value) {
     const options = { month: 'long', day: 'numeric' };
+    this.paragraph.innerHTML = '';
 
     if (value === 0) {
       this.date = new Date();
@@ -77,13 +78,13 @@ class DiaryEntry {
     this.title.textContent = this.date.toLocaleDateString('en-US', options);
     this.prompt.textContent = this.prompts[index - 1];
 
-    //make a get request with date and diary id to see if their is conent to display
-    //fetch(`nodeapi/?=${this.diaryId}/&${this.date.toLocaleDateString()}`)
     const result = await fetch(`/lookupEntry/${this.diaryId}?date=${this.date.toLocaleDateString()}`);
     const data = await result.json();
 
-    if (data.content) {
-      this.paragraph.textContent = data.content;
+    console.log("get for content", data);
+
+    if (data.result) {
+      this.paragraph.textContent = data.result.content;
       this.paragraph.classList.remove('hidden');
     }
   }
@@ -113,7 +114,7 @@ class DiaryEntry {
         }
         const result = await fetch(`/newEntry/${this.diaryId}?date=${this.date.toLocaleDateString()}`, fetchOptions);
         const data = await result.json();
-        console.log(data);
+        console.log("return from post new content", data);
         this.paragraph.textContent = text
       }
       this.textArea.classList.add('hidden');

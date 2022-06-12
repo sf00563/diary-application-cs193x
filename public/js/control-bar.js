@@ -8,16 +8,16 @@ class ControlBar {
     const p = document.createElement('p');
     p.textContent = "home";
     const image = document.createElement('img');
-    image.src = './img/checked.png';
+    image.src = '/img/checked.png';
     image.classList.add('hidden');
 
     const backImage = document.createElement('img');
-    backImage.src = './img/back.png';
+    backImage.src = '/img/back.png';
     this.backButton = document.createElement('button');
     this.backButton.append(backImage);
 
     const forwardImage = document.createElement('img');
-    forwardImage.src = './img/forward.png';
+    forwardImage.src = '/img/forward.png';
     this.forwardButton = document.createElement('button');
     this.forwardButton.append(forwardImage);
 

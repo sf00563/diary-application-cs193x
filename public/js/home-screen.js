@@ -16,6 +16,6 @@ class HomeScreen {
     const result = await fetch('/newDiary', { method: 'POST' });
     const json = await result.json();
     console.log(json.id);
-    //window.location.href = `/id/${result.idDiary}`
+    window.location.href = `/diary/${json.id}`;
   }
 }
